@@ -26,24 +26,38 @@ public class LinkedList<T> {
      * @return true if the lists have the same elements in the same order, false otherwise
      */
     public boolean isEqual(LinkedList list2) {
-
-
+        if(size != list2.size()) {
+            return false;
+        }
+        else {
+            for(int i=0; i < size; i++) {
+                if(!(this.get(i).equals(list2.get(i)))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
-
 
     /**
      * Return true if the list is symmetrical, false otherwise
      * ex: list: 1 -> 2 -> 3 -> 2 -> 1
      *     return: true
      *
-     *     list: a -> b -> c -> b -> f
+     *     list: a -> b -> c -> b -> f -> g -> h
      *     return: false
      *
      * @return true if the list is symmetrical, false otherwise
      */
 
     public boolean isSymmetrical() {
-
+        // i < size/2 means the loops stops before the middle index. works if the LL is even or odd
+        for(int i=0; i < size/2; i++) {
+                if (!(get(i).equals(get(size-i-1)))) {
+                    return false;
+                }
+        }
+        return true;
     }
 
 
@@ -57,7 +71,27 @@ public class LinkedList<T> {
      * @param factor the amount to multiply the number of occurrences of each element by
      */
     public void multiply(int factor) {
+        if(factor==0) {
+            clear();
+        }
+        Node<T> outCurrent = head;
 
+        int tempSize = size;
+        for(int i=0; i<size;i++) {
+            Node<T> current=outCurrent;
+            T val = outCurrent.getValue();
+            Node<T> outNextNode = outCurrent.getNext();
+            for(int j=0; j<factor-1; j++) {
+                Node<T> newNode = new NodeImpl<>(val, null);
+                current.setNext(newNode);
+                current = newNode;
+                tail = current;
+                tempSize++;
+            }
+            current.setNext(outNextNode);
+            outCurrent=outNextNode;
+        }
+        size = tempSize;
     }
 
 
@@ -75,7 +109,17 @@ public class LinkedList<T> {
      * @return true if the list contains a cycle, false otherwise
      */
     public boolean containsCycle() {
-
+        Node<T> current=head;
+        ArrayList<Node<T>> nodeList = new ArrayList<>();
+        for(int i=0; i<size;i++) {
+            nodeList.add(current);
+            Node<T> nextNode = current.getNext();
+            if(nodeList.contains(nextNode)) {
+                return true;
+            }
+            current=nextNode;
+        }
+        return false;
     }
 
     /**
@@ -96,9 +140,35 @@ public class LinkedList<T> {
      * @param list2
      */
     public void merge(LinkedList list2) {
-    
+        if(size<list2.size()) {
+            System.out.println("Warning: list 2 must be shorter than or equal to list 1.");
+            return;
+        }
+        Node<T> current=head;
+        Node<T> current1=head;
+        Node<T> current2=list2.getNode(0);
+        for(int i=0; i<list2.size();i++) {
+            Node<T> nextNode1 = current1.getNext();
+            Node<T> nextNode2 = current2.getNext();
+            current.setNext(current2);
+            current = current2;
+            current.setNext(nextNode1);
+            current=nextNode1;
+            current1=nextNode1;
+            current2=nextNode2;
+            size++;
+        }
+        list2.clear();
     }
-
+    // Custom method below to access and return Nodes in a LL given an integer index.
+    // Uses: merge() and case testing in main()
+    public Node<T> getNode(int index) {
+        Node<T> current = head;
+        for (int i=0; i<index;i++) {
+            current = current.getNext();
+        }
+        return current;
+    }
 
     /* Implementation given to you. Do not modify below this. */
 
@@ -225,7 +295,7 @@ public class LinkedList<T> {
                 add(element);
                 return;
             } else {
-                Node<T> newNode = new NodeImpl<T>((T) element, head.getNext());
+                Node<T> newNode = new NodeImpl<T>((T) element, head);
                 head = newNode;
                 size++;
                 return;
