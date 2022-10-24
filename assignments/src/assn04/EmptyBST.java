@@ -53,4 +53,13 @@ public class EmptyBST<T extends Comparable<T>> implements BST<T> {
 		return true;
 	}
 
+	@Override
+	public void setElement(T val) {}
+
+	@Override
+	public void setRight(BST<T> bst) {}
+
+	@Override
+	public void setLeft(BST<T> bst) {}
+
 }

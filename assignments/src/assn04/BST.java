@@ -55,4 +55,9 @@ public interface BST<T extends Comparable<T>> {
   T getElement();
   
   boolean isEmpty();
+
+  void setElement(T val);
+
+  void setRight(BST<T> bst);
+  void setLeft(BST<T> bst);
 }
