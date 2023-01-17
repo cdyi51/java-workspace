@@ -20,6 +20,7 @@ public class Main {
             }
         }
         System.out.println("Welcome to the program!");
+        System.out.println("Type a command: ");
         Boolean active = true;
         while(active) {
             String newCommand = scanner.nextLine().strip();
