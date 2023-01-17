@@ -11,7 +11,13 @@ public interface SelfBalancingBST<T extends Comparable<T>> {
      * Returns height of the tree.
      */
     int height();
-    
+//    void printBreadthFirstTraversal();
+    int getHeight(AVLTree<T> tree);
+
+    void updateSize();
+    SelfBalancingBST<T> remove_sub(T element);
+//    SelfBalancingBST<T> insert_sub(T element);
+
     /**
      * Returns the number of elements in the tree.
      *
@@ -85,5 +91,12 @@ public interface SelfBalancingBST<T extends Comparable<T>> {
      */
 
     SelfBalancingBST<T> getRight();
+
+    void setRight(SelfBalancingBST<T> tree);
+
+    void setLeft(SelfBalancingBST<T> tree);
+    void setValue(T val);
+    void show_tree();
+
 
 }

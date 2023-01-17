@@ -3,7 +3,7 @@ package assn07;
 public class Account <K,V> {
     private K _website;
     private V _password;
-    private Account _next;
+    private Account<K,V> _next;
 
     public Account(K website, V password) {
         _website = website;
@@ -23,11 +23,12 @@ public class Account <K,V> {
         return _password;
     }
 
+
     public void setPassword(V password) {
         this._password = password;
     }
 
-    public Account getNext() {
+    public Account<K,V> getNext() {
         return _next;
     }
     public void setNext(Account next) {

@@ -52,9 +52,6 @@ public class NonEmptyBST<T extends Comparable<T>> implements BST<T> {
 			BST<T> result = removeRoot(this);
 			return result;
 		}
-		if(_left.isEmpty() && _right.isEmpty()) {
-			return empty;
-		}
 		if(!(_left.isEmpty())) {
 			if (element.compareTo(root) == -1) {
 				if (_left.getElement().equals(element)) {
@@ -79,8 +76,7 @@ public class NonEmptyBST<T extends Comparable<T>> implements BST<T> {
 	public BST<T> removeHelper(BST<T> child) {
 			// case 1: if child has no children, then you just delete the child
 			if(child.getLeft().isEmpty() && child.getRight().isEmpty()) {
-				child = empty;
-				return child;
+				return new EmptyBST<>();
 			}
 			//case 2: if child has one child, check which side and then repoint
 			if(!(child.getLeft().isEmpty()) && child.getRight().isEmpty()) {
@@ -91,40 +87,35 @@ public class NonEmptyBST<T extends Comparable<T>> implements BST<T> {
 				child = child.getRight();
 				return child;
 			}
-			// case 3: if child has two children, traverse the left side and find the rightmost element, then
-			//replace child value with rightmost el and then delete rightmost el
-			if(!(child.getLeft()).isEmpty() && !(child.getRight().isEmpty())) {
-				BST<T> prevCurrent = child;
-				BST<T> current = prevCurrent.getLeft();
-				Boolean isLeft = true;
-				// special case: if first left doesn't have a right child, then it is the rightmost element.
-				if(!(current.getLeft().isEmpty()) && current.getRight().isEmpty()) {
-					child.setElement(current.getElement());
-					child.setLeft(current.getLeft());
-					return child;
-				}
+			// case 3: if child has two children, traverse the right side for the min
+			if(!(_left.isEmpty()) && !(_right.isEmpty())) {
+				BST<T> parent = child;
+				BST<T> toRemove = parent.getRight();
+				Boolean isRight = true;
 				while(true) {
-					if (!(current.isEmpty()) && !(current.getRight().isEmpty())) {
-						prevCurrent = current;
-						current = prevCurrent.getRight();
-						isLeft = false;
+					if (!(toRemove.isEmpty()) && !(toRemove.getLeft().isEmpty())) {
+						parent = toRemove;
+						toRemove = parent.getLeft();
+						isRight = false;
 					} else {
-						T rightMost = current.getElement();
-						child.setElement(rightMost);
-						if (isLeft) {
-							prevCurrent.setLeft(empty);
+						BST<T> successor = toRemove;
+						child.setElement((successor.getElement()));
+						if (isRight) {
+							parent.setRight(empty);
 						} else {
-							prevCurrent.setRight(empty);
+							if (!(successor.getRight().isEmpty())) {
+								parent.setLeft(successor.getRight());
+							} else {
+								parent.setLeft(empty);
+							}
 						}
 						break;
 					}
 				}
-
 			}
 			return child;
 		}
 
-		// ik this method is more or less the same as removeHelper, but it helped me to think of root as a separate case.
 	public BST<T> removeRoot(BST<T> rootBst) {
 		//case1: root is leaf
 		if(_left.isEmpty() && _right.isEmpty()) {
@@ -139,28 +130,9 @@ public class NonEmptyBST<T extends Comparable<T>> implements BST<T> {
 			rootBst = _right;
 			return rootBst;
 		}
-		//case 3: root has elements on both sides. traverse the left side and find the rightmost element. "replace" root
-		// with rightmost el, then disconnect original rightmost el from tree.
+		//case 3: root has elements on both sides. traverse right side and find the leftmost element or the minimum
 		if(!(_left.isEmpty()) && !(_right.isEmpty())) {
-			BST<T> parent = rootBst;
-			BST<T> toRemove = _left;
-			Boolean isLeft = true;
-			while(true) {
-				if (!(toRemove.isEmpty()) && !(toRemove.getRight().isEmpty())) {
-					parent = toRemove;
-					toRemove = parent.getRight();
-					isLeft = false;
-				} else {
-					T rightMost = toRemove.getElement();
-					rootBst.setElement(rightMost);
-					if (isLeft) {
-						parent.setLeft(empty);
-					} else {
-						parent.setRight(empty);
-					}
-					break;
-				}
-			}
+			removeHelper(rootBst);
 		}
 		return rootBst;
 	}

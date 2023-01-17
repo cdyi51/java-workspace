@@ -7,9 +7,6 @@ public class LinkedList<T> {
     private Node<T> tail = null;
     private int size = 0;
 
-
-
-
     /**
      * Return true if this linked list is equal to the list argument, false otherwise.
      * Two lists are equal if they have the same size, and the same
@@ -31,7 +28,7 @@ public class LinkedList<T> {
         }
         else {
             for(int i=0; i < size; i++) {
-                if(!(this.get(i).equals(list2.get(i)))) {
+                if(!(get(i).equals(list2.get(i)))) {
                     return false;
                 }
             }
